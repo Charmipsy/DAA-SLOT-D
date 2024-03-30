@@ -1,0 +1,23 @@
+def insert_number(num_list, num, index):
+    """
+    Function to insert a number into a list at a specified index.
+
+    Parameters:
+        num_list (list): The original list.
+        num (int): The number to be inserted.
+        index (int): The index where the number should be inserted.
+
+    Returns:
+        list: The modified list with the number inserted at the specified index.
+    """
+    num_list.insert(index, num)
+    return num_list
+
+if __name__ == "__main__":
+    original_list = [1, 2, 3, 4, 5]
+    number_to_insert = 10
+    insertion_index = 2
+
+    modified_list = insert_number(original_list, number_to_insert, insertion_index)
+    print("Original List:", original_list)
+    print("Modified List:", modified_list)

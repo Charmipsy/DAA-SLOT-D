@@ -1,0 +1,52 @@
+import itertools
+
+def calculate_distance(points, order):
+    """
+    Calculate the total distance for a given order of points.
+
+    Parameters:
+        points (list of tuples): List of (x, y) coordinates of points.
+        order (list of int): Order in which points are visited.
+
+    Returns:
+        float: Total distance of the route.
+    """
+    total_distance = 0
+    for i in range(len(order) - 1):
+        point1 = points[order[i]]
+        point2 = points[order[i + 1]]
+        distance = ((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2) ** 0.5
+        total_distance += distance
+    return total_distance
+
+def find_optimal_route(points):
+    """
+    Find the optimal route for the traveling salesman problem using brute-force.
+
+    Parameters:
+        points (list of tuples): List of (x, y) coordinates of points.
+
+    Returns:
+        tuple: Optimal order of points and the optimal distance.
+    """
+    optimal_order = None
+    optimal_distance = float('inf')
+
+    n = len(points)
+    all_orders = itertools.permutations(range(n))
+
+    for order in all_orders:
+        distance = calculate_distance(points, order)
+        if distance < optimal_distance:
+            optimal_distance = distance
+            optimal_order = order
+
+    return optimal_order, optimal_distance
+
+if __name__ == "__main__":
+    
+    points = [(0, 0), (1, 2), (3, 1), (2, 3)]
+
+    optimal_order, optimal_distance = find_optimal_route(points)
+    print("Optimal Order of Points:", optimal_order)
+    print("Optimal Distance:", optimal_distance)

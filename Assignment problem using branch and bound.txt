@@ -1,41 +1,55 @@
 import numpy as np
-from scipy.optimize import linear_sum_assignment
+from itertools import permutations
 
-def branch_and_bound_assignment(cost_matrix):
-    rows, cols = linear_sum_assignment(cost_matrix)
-    min_cost = cost_matrix[rows, cols].sum()
+class Node:
+    def __init__(self, parent, level, cost, assigned_tasks):
+        self.parent = parent
+        self.level = level
+        self.cost = cost
+        self.assigned_tasks = assigned_tasks
 
-    def bound(cost_matrix, row, col):
-        bound_val = 0
-        for i in range(row, len(cost_matrix)):
-            min_val = float('inf')
-            for j in range(len(cost_matrix[i])):
-                if j != col and cost_matrix[i][j] < min_val:
-                    min_val = cost_matrix[i][j]
-            bound_val += min_val
-        return bound_val
+def calculate_cost(matrix, assignments):
+    total_cost = 0
+    for agent, task in enumerate(assignments):
+        total_cost += matrix[agent][task]
+    return total_cost
 
-    def backtrack(row, col, assigned, cost_so_far):
-        nonlocal min_cost
-        if row == len(cost_matrix):
-            if cost_so_far < min_cost:
-                min_cost = cost_so_far
-            return
-        for j in range(len(cost_matrix[row])):
-            if not assigned[j]:
-                new_cost = cost_so_far + cost_matrix[row][j] + bound(cost_matrix, row + 1, j)
-                if new_cost < min_cost:
-                    assigned[j] = True
-                    backtrack(row + 1, j, assigned, new_cost)
-                    assigned[j] = False
+def assign_jobs(matrix):
+    n = len(matrix)
+    min_cost = float('inf')
+    min_assignment = None
+    queue = []
+    root = Node(None, -1, 0, [])
 
-    assigned = [False] * len(cost_matrix[0])
-    backtrack(0, -1, assigned, 0)
-    return min_cost
+    queue.append(root)
 
-# Example usage:
-cost_matrix = np.array([[8, 2, 5, 6],
-                        [3, 9, 4, 3],
-                        [7, 5, 6, 4],
-                        [5, 8, 3, 7]])
-print("Minimum cost:", branch_and_bound_assignment(cost_matrix))
+    while queue:
+        current_node = queue.pop(0)
+        current_level = current_node.level + 1
+
+        if current_level == n:
+            if current_node.cost < min_cost:
+                min_cost = current_node.cost
+                min_assignment = current_node.assigned_tasks
+            continue
+
+        for task in range(n):
+            if task not in current_node.assigned_tasks:
+                assigned_tasks = current_node.assigned_tasks + [task]
+                cost = calculate_cost(matrix, assigned_tasks)
+                if cost < min_cost:
+                    child = Node(current_node, current_level, cost, assigned_tasks)
+                    queue.append(child)
+
+    return min_cost, min_assignment
+
+if __name__ == "__main__":
+    # Example usage
+    matrix = np.array([[10, 2, 6, 5],
+                       [8, 7, 4, 5],
+                       [9, 1, 2, 9],
+                       [7, 8, 3, 6]])
+
+    min_cost, min_assignment = assign_jobs(matrix)
+    print("Minimum cost:", min_cost)
+    print("Assignments:", min_assignment)

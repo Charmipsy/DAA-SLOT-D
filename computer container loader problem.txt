@@ -1,0 +1,27 @@
+def pack_containers(items, container_capacity):
+    items.sort(reverse=True) 
+    containers = []
+    current_container = []
+
+    for item in items:
+        if sum(current_container) + item <= container_capacity:
+            current_container.append(item)
+        else:
+            containers.append(current_container)
+            current_container = [item]
+
+    if current_container:
+        containers.append(current_container)
+
+    return containers
+
+def display_containers(containers):
+    for i, container in enumerate(containers, 1):
+        print(f"Container {i}: {container}")
+
+if __name__ == "__main__":
+    items = [3, 7, 10, 5, 8, 4, 2]
+    container_capacity = 10
+
+    containers = pack_containers(items, container_capacity)
+    display_containers(containers)

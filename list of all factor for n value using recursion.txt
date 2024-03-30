@@ -1,0 +1,16 @@
+def get_factors(n, divisor=1, factors=None):
+    if factors is None:
+        factors = []
+
+    if divisor > n:
+        return factors
+
+    if n % divisor == 0:
+        factors.append(divisor)
+
+    return get_factors(n, divisor + 1, factors)
+
+if __name__ == "__main__":
+    n = int(input("Enter a number to find its factors: "))
+    factors = get_factors(n)
+    print(f"The factors of {n} are: {factors}")
