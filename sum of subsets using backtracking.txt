@@ -1,0 +1,25 @@
+def sum_of_subsets_util(arr, target_sum, subset, index, current_sum):
+    if current_sum == target_sum:
+        print(subset)
+        return
+
+    if current_sum > target_sum or index == len(arr):
+        return
+
+    # Include the current element in the subset
+    subset.append(arr[index])
+    sum_of_subsets_util(arr, target_sum, subset, index + 1, current_sum + arr[index])
+
+    # Exclude the current element from the subset
+    subset.pop()
+    sum_of_subsets_util(arr, target_sum, subset, index + 1, current_sum)
+
+def sum_of_subsets(arr, target_sum):
+    subset = []
+    sum_of_subsets_util(arr, target_sum, subset, 0, 0)
+
+# Example usage:
+arr = [2, 4, 6, 8]
+target_sum = 10
+print("Subsets with sum equal to", target_sum, ":")
+sum_of_subsets(arr, target_sum)

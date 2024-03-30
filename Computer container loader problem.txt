@@ -1,0 +1,27 @@
+def container_loader(items, container_capacity):
+    items.sort(reverse=True)  # Sort items in decreasing order
+
+    containers = [[]]  # List of containers, initially empty
+    for item in items:
+        loaded = False
+        for container in containers:
+            if sum(container) + item <= container_capacity:
+                container.append(item)
+                loaded = True
+                break
+        if not loaded:
+            containers.append([item])
+
+    return containers
+
+# Example usage:
+items = [4, 8, 6, 3, 2, 7, 5]
+container_capacity = 10
+result = container_loader(items, container_capacity)
+
+print("Items:", items)
+print("Container Capacity:", container_capacity)
+print("Number of Containers Required:", len(result))
+print("Contents of Containers:")
+for i, container in enumerate(result):
+    print("Container", i + 1, ":", container)

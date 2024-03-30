@@ -1,0 +1,16 @@
+def linear_search(arr, target):
+    for i in range(len(arr)):
+        if arr[i] == target:
+            return i  # Return the index of the target element if found
+    return -1  # Return -1 if target is not found in the array
+
+# Example usage:
+array = [4, 2, 7, 1, 9, 5]
+target = int(input("Enter the number to search for: "))
+
+index = linear_search(array, target)
+
+if index != -1:
+    print("Element found at index:", index)
+else:
+    print("Element not found in the array.")

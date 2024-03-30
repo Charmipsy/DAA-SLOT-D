@@ -1,0 +1,41 @@
+import numpy as np
+from scipy.optimize import linear_sum_assignment
+
+def branch_and_bound_assignment(cost_matrix):
+    rows, cols = linear_sum_assignment(cost_matrix)
+    min_cost = cost_matrix[rows, cols].sum()
+
+    def bound(cost_matrix, row, col):
+        bound_val = 0
+        for i in range(row, len(cost_matrix)):
+            min_val = float('inf')
+            for j in range(len(cost_matrix[i])):
+                if j != col and cost_matrix[i][j] < min_val:
+                    min_val = cost_matrix[i][j]
+            bound_val += min_val
+        return bound_val
+
+    def backtrack(row, col, assigned, cost_so_far):
+        nonlocal min_cost
+        if row == len(cost_matrix):
+            if cost_so_far < min_cost:
+                min_cost = cost_so_far
+            return
+        for j in range(len(cost_matrix[row])):
+            if not assigned[j]:
+                new_cost = cost_so_far + cost_matrix[row][j] + bound(cost_matrix, row + 1, j)
+                if new_cost < min_cost:
+                    assigned[j] = True
+                    backtrack(row + 1, j, assigned, new_cost)
+                    assigned[j] = False
+
+    assigned = [False] * len(cost_matrix[0])
+    backtrack(0, -1, assigned, 0)
+    return min_cost
+
+# Example usage:
+cost_matrix = np.array([[8, 2, 5, 6],
+                        [3, 9, 4, 3],
+                        [7, 5, 6, 4],
+                        [5, 8, 3, 7]])
+print("Minimum cost:", branch_and_bound_assignment(cost_matrix))

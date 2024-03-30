@@ -1,0 +1,12 @@
+def insert_number_in_list(lst, num, index):
+    lst.insert(index, num)
+    return lst
+
+# Example usage:
+original_list = [1, 2, 3, 4, 5]
+number_to_insert = 10
+position_to_insert = 2
+
+updated_list = insert_number_in_list(original_list, number_to_insert, position_to_insert)
+print("Original List:", original_list)
+print("Updated List:", updated_list)
